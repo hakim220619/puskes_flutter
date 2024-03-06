@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:puskes/home/HomePage.dart';
 import 'package:puskes/keluhan/addJabawanAdmin.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:puskes/keluhan/listKeluhanById.dart';
@@ -66,6 +67,18 @@ class _ListKeluhanUsersState extends State<ListKeluhanUsers> {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
+        leading: InkWell(
+              onTap: () {
+                Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Homepage()));
+              },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Color.fromARGB(253, 255, 252, 252),
+              ),
+            ),
         backgroundColor: Colors.blue[300],
       ),
       body: RefreshIndicator(

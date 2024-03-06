@@ -4,6 +4,7 @@ import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:puskes/konsultasi/listKonsultasi.dart';
 import 'package:puskes/konsultasi/view.dart';
 import 'package:puskes/keluhan/keluhanPage.dart';
+import 'package:puskes/listusers/listusers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:puskes/login/view/login.dart';
@@ -273,11 +274,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const KelasPage(keyword: 'nilai')));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ListUsers()));
                         // }
                       },
                     ),

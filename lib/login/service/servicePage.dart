@@ -59,8 +59,7 @@ class HttpService {
   }
 
   static final _registerUrl = Uri.parse('${dotenv.env['url']}/register');
-  static register(nik, name, email, password, address, jenis_kelamin, tanggal_lahir,
-      bb_lahir, tb_lahir, nama_ortu, context) async {
+  static register(nik, name, email, password, address, jenis_kelamin, tanggal_lahir, nama_ortu, context) async {
         EasyLoading.show(status: 'loading...');
     http.Response response = await _client.post(_registerUrl, body: {
       "nik": nik,
@@ -70,8 +69,6 @@ class HttpService {
       "address": address,
       "jenis_kelamin": jenis_kelamin,
       "tanggal_lahir": tanggal_lahir.text,
-      "bb_lahir": bb_lahir,
-      "tb_lahir": tb_lahir,
       "nama_ortu": nama_ortu,
     });
     if (response.statusCode == 200) {

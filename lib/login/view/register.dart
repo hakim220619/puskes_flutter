@@ -258,58 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukan Nama Lengkap';
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          prefixIcon: const Icon(Icons.scale),
-                          labelText: 'Masukan Berat badan',
-                          hintText: 'Masukan Berat badan'),
-                      onChanged: (value) {
-                        setState(() {
-                          bb_lahir = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukan Nama Lengkap';
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          prefixIcon: const Icon(Icons.person_3_outlined),
-                          labelText: 'Masukan Tinggi badan',
-                          hintText: 'Masukan Tinggi badan'),
-                      onChanged: (value) {
-                        setState(() {
-                          tb_lahir = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    
                     TextFormField(
                       obscureText: false,
                       validator: (value) {
@@ -346,8 +295,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                 address,
                                 jenis_kelamin,
                                 tanggal_lahir,
-                                bb_lahir,
-                                tb_lahir,
                                 nama_ortu,
                                 context);
                           }

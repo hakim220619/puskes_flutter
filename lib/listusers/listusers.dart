@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:puskes/home/HomePage.dart';
+import 'package:puskes/keluhan/addJabawanAdmin.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
+import 'package:puskes/keluhan/listKeluhanById.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
+import 'package:puskes/penimbangan/penimbangan.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-class ListKonsultasi extends StatefulWidget {
-  const ListKonsultasi({
+class ListUsers extends StatefulWidget {
+  const ListUsers({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<ListKonsultasi> createState() => _ListKonsultasiState();
+  State<ListUsers> createState() => _ListUsersState();
 }
 
 List _listsData = [];
 
-class _ListKonsultasiState extends State<ListKonsultasi> {
+class _ListUsersState extends State<ListUsers> {
   Future<dynamic> listKeluhan() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var token = preferences.getString('token');
-      var url = Uri.parse('${dotenv.env['url']}/listKonsultasi');
+      var url = Uri.parse('${dotenv.env['url']}/listUsers');
       final response = await http.get(url, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer $token",
@@ -35,7 +38,7 @@ class _ListKonsultasiState extends State<ListKonsultasi> {
         // print(data);
         setState(() {
           _listsData = data['data'];
-          // print(_listsData);
+          print(_listsData);
         });
       }
     } catch (e) {
@@ -61,11 +64,11 @@ class _ListKonsultasiState extends State<ListKonsultasi> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'List Konsultasi',
+          'List Users',
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
-        leading: InkWell(
+            leading: InkWell(
               onTap: () {
                 Navigator.push(
                               context,
@@ -87,36 +90,35 @@ class _ListKonsultasiState extends State<ListKonsultasi> {
             margin: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                ListView.builder(
-                  itemCount: 1,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                        title: Text(
-                          "${_listsData[index]['name']}",
-                          style: const TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          "${_listsData[index]['nik']}",
-                          maxLines: 2,
-                          style: const TextStyle(fontSize: 14.0),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => KonsultasiAdmin(id_ortu: _listsData[index]['id_ortu'].toString(),),
-                            ),
-                          );
-                        },
-                      
-                    );
-                  },
+                ListTile(
+                      title: Text(
+                        "${_listsData[index]['name']}",
+                        style: const TextStyle(
+                            fontSize: 15.0, fontWeight: FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(
+                        "BB ${_listsData[index]['bb_lahir']} TB ${_listsData[index]['tb_lahir']}",
+                        maxLines: 2,
+                        style: const TextStyle(fontSize: 14.0),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      onTap: () {
+                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PenimbanganPage(
+                                id: _listsData[index]['id'].toString(),
+                                bblahir: _listsData[index]['bb_lahir'].toString(),
+                                tblahir: _listsData[index]['tb_lahir'].toString(),
+                                  ),
+                          ),
+                        );
+                      },
+                    
+                  
                 ),
               ],
             ),

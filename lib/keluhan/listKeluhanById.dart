@@ -9,9 +9,7 @@ import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ListKeluhanAdminById extends StatefulWidget {
-  const ListKeluhanAdminById({
-    Key? key, required this.id
-  }) : super(key: key);
+  const ListKeluhanAdminById({Key? key, required this.id}) : super(key: key);
 
   final String id;
 
@@ -71,47 +69,46 @@ class _ListKeluhanAdminByIdState extends State<ListKeluhanAdminById> {
       ),
       body: RefreshIndicator(
         onRefresh: refresh,
-        child: 
-                ListView.builder(
-                  itemCount: _listsData.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        "${_listsData[index]['pertanyaan']}",
-                        style: const TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+        child: ListView.builder(
+          itemCount: _listsData.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) => Card(
+            margin: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    "${_listsData[index]['pertanyaan']}",
+                    style: const TextStyle(
+                        fontSize: 15.0, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    "${_listsData[index]['created_at']}",
+                    maxLines: 2,
+                    style: const TextStyle(fontSize: 14.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddJawabanPage(
+                            pertanyaan:
+                                _listsData[index]['pertanyaan'].toString(),
+                            id_ortu: _listsData[index]['id_ortu'].toString(),
+                            id: _listsData[index]['id'].toString()),
                       ),
-                      subtitle: Text(
-                        "${_listsData[index]['created_at']}",
-                        maxLines: 2,
-                        style: const TextStyle(fontSize: 14.0),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => AddJawabanPage(
-                                pertanyaan:
-                                    _listsData[index]['pertanyaan'].toString(),
-                                id_ortu:
-                                    _listsData[index]['id_ortu'].toString(),
-                                    id: _listsData[index]['id'].toString()),
-                          ),
-                        );
-                      },
                     );
                   },
                 ),
-              
+              ],
             ),
-          );
-        
-      
-    
+          ),
+        ),
+      ),
+    );
   }
 }
