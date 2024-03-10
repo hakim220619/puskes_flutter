@@ -6,26 +6,31 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:puskes/databayi/databayi.dart';
 import 'package:puskes/imunisasi/imunisasiPage.dart';
 
 class HttpServiceDataBayi {
   static final _client = http.Client();
 
-  static final _keluhanUrl = Uri.parse('${dotenv.env['url']}/addImunisasi');
-  static editData(id, nik, name, email, password, address, jenis_kelamin, tanggal_lahir, nama_ortu, bb_lahir, tb_lahir, context) async {
+  static final _userUrl = Uri.parse('${dotenv.env['url']}/editUsersOrtu');
+  static editData(id, _nik, name, email, password, address, jenisKelamin, tanggalLahir, namaOrtu, bbLahir, tbLahir, context) async {
     EasyLoading.show(status: 'loading...');
-    http.Response response = await _client.post(_keluhanUrl, body: {
-      "nik": nik,
+    // print(_nik);
+    var data = {
+      "id": id,
+      "nik": _nik,
       "name": name,
       "email": email,
       "password": password,
       "address": address,
-      "jenis_kelamin": jenis_kelamin,
-      "tanggal_lahir": tanggal_lahir.text,
-      "nama_ortu": nama_ortu,
-      "bb_lahir": bb_lahir,
-      "tb_lahir": tb_lahir,
-    });
+      "jenis_kelamin": jenisKelamin,
+      "tanggal_lahir": tanggalLahir.text,
+      "nama_ortu": namaOrtu,
+      "bb_lahir": bbLahir,
+      "tb_lahir": tbLahir,
+    };
+    // print(data);
+    http.Response response = await _client.post(_userUrl, body: data);
     print(response.body);
     if (response.statusCode == 200) {
       // ignore: non_constant_identifier_names
@@ -34,7 +39,7 @@ class HttpServiceDataBayi {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (BuildContext context) => const ListImunisasi(),
+          builder: (BuildContext context) => const DatabAyiPage(),
         ),
       );
       // var Users = jsonDecode(response.body);

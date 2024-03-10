@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:puskes/databayi/databayi.dart';
 import 'package:puskes/imunisasi/imunisasiPage.dart';
@@ -7,6 +9,7 @@ import 'package:puskes/konsultasi/listKonsultasi.dart';
 import 'package:puskes/konsultasi/view.dart';
 import 'package:puskes/keluhan/keluhanPage.dart';
 import 'package:puskes/listusers/listusers.dart';
+import 'package:puskes/penimbangan/penimbanganusers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:puskes/login/view/login.dart';
@@ -72,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String? name;
   String? role;
+
   late SharedPreferences profileData;
   static final _client = http.Client();
   static final _logoutUrl = Uri.parse('${dotenv.env['url']}/logout');
@@ -162,8 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       name = profileData.getString('name');
       role = profileData.getString('role');
-      print(name);
-      print(role);
+     
     });
   }
 
@@ -353,11 +356,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const KelasPage(keyword: 'nilai')));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PenimbanganPageUsers()));
                         // }
                       },
                     ),

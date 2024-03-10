@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:puskes/databayi/databayi.dart';
 import 'package:puskes/databayi/serviceDataBayi.dart';
 import 'package:puskes/imunisasi/serviceImunisasi.dart';
 import 'package:puskes/keluhan/apiKeluhan.dart';
@@ -39,16 +41,19 @@ class EditDataBayi extends StatefulWidget {
 }
 
 class _EditDataBayiState extends State<EditDataBayi> {
-  late String nik;
-  late String nama;
-  late String email;
-  late String password;
-  late String address;
+  var _nik;
+  var _nama;
+  var _email;
+  var _password;
+  var _address;
   var jenis_kelamin;
 
-  late String bb_lahir;
-  late String tb_lahir;
-  late String nama_ortu;
+  var _bb_lahir;
+  var _tb_lahir;
+  var _nama_ortu;
+
+  static final _client = http.Client();
+  static final _userUrl = Uri.parse('${dotenv.env['url']}/editUsersOrtu');
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   // ignore: override_on_non_overriding_member
@@ -81,6 +86,7 @@ class _EditDataBayiState extends State<EditDataBayi> {
 // print(widget.tanggalLahir);
     // getagentTo();
   }
+
   TextEditingController tanggal_lahir = TextEditingController();
   @override
   void dispose() {
@@ -88,10 +94,10 @@ class _EditDataBayiState extends State<EditDataBayi> {
     super.dispose();
   }
 
-final List<String> nameList = <String>[
-      "Laki-Laki",
-      "Perempuan",
-    ];
+  final List<String> nameList = <String>[
+    "Laki-Laki",
+    "Perempuan",
+  ];
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -135,7 +141,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Nik'),
                       onChanged: (value) {
                         setState(() {
-                          nik = value;
+                          _nik = value;
                         });
                       },
                     ),
@@ -161,7 +167,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Nama'),
                       onChanged: (value) {
                         setState(() {
-                          nama = value;
+                          _nama = value;
                         });
                       },
                     ),
@@ -187,7 +193,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Email'),
                       onChanged: (value) {
                         setState(() {
-                          email = value;
+                          _email = value;
                         });
                       },
                     ),
@@ -196,12 +202,6 @@ final List<String> nameList = <String>[
                     ),
                     TextFormField(
                       obscureText: !_passwordVisible,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukan Password';
-                        }
-                        return null;
-                      },
                       maxLines: 1,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -223,7 +223,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Password'),
                       onChanged: (value) {
                         setState(() {
-                          password = value;
+                          _password = value;
                         });
                       },
                     ),
@@ -249,7 +249,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Adrress'),
                       onChanged: (value) {
                         setState(() {
-                          address = value;
+                          _address = value;
                         });
                       },
                     ),
@@ -257,7 +257,6 @@ final List<String> nameList = <String>[
                       height: 10,
                     ),
                     DropdownButtonFormField(
-                      
                       decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.man_2),
                           border: OutlineInputBorder(
@@ -268,7 +267,6 @@ final List<String> nameList = <String>[
                       items: nameList.map(
                         (item) {
                           return DropdownMenuItem(
-                            
                             value: item,
                             child: Text(item),
                           );
@@ -289,7 +287,7 @@ final List<String> nameList = <String>[
                       height: 10.0,
                     ),
                     TextFormField(
-              //  initialValue: widget.tanggalLahir.toString(),
+                      //  initialValue: widget.tanggalLahir.toString(),
                       readOnly: true,
                       controller: tanggal_lahir,
                       decoration: InputDecoration(
@@ -307,12 +305,11 @@ final List<String> nameList = <String>[
                         DateFormat('dd/mm/yyyy').format(DateTime.now());
                         var date = await showDatePicker(
                             context: context,
-                            
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1999),
                             lastDate: DateTime.now());
                         if (date == null) {
-                    //  print(date);
+                          //  print(date);
                           tanggal_lahir.text = widget.tanggalLahir;
                         } else {
                           tanggal_lahir.text = date.toString().substring(0, 10);
@@ -341,7 +338,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Nama Orang Tua'),
                       onChanged: (value) {
                         setState(() {
-                          nama_ortu = value;
+                          _nama_ortu = value;
                         });
                       },
                     ),
@@ -368,7 +365,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Berat badan'),
                       onChanged: (value) {
                         setState(() {
-                          bb_lahir = value;
+                          _bb_lahir = value;
                         });
                       },
                     ),
@@ -395,7 +392,7 @@ final List<String> nameList = <String>[
                           hintText: 'Masukan Tinggi Badan'),
                       onChanged: (value) {
                         setState(() {
-                          tb_lahir = value;
+                          _tb_lahir = value;
                         });
                       },
                     ),
@@ -404,20 +401,45 @@ final List<String> nameList = <String>[
                     ),
                     InkWell(
                         onTap: () async {
+                          // print(_nama);
+
                           if (_formKey.currentState!.validate()) {
-                            await HttpServiceDataBayi.editData(
-                              widget.id,
-                                 nik,
-                                nama,
-                                email,
-                                password,
-                                address,
-                                jenis_kelamin,
-                                tanggal_lahir,
-                                nama_ortu,
-                                bb_lahir,
-                                tb_lahir,
-                                context);
+                            EasyLoading.show(status: 'loading...');
+                            // print(tanggal_lahir.text);
+                            var data = {
+                              "id": widget.id,
+                              "nik": _nik == null ? widget.nik : _nik,
+                              "name": _nama == null ? widget.nama : _nama,
+                              "email": _email == null ? widget.email : _email,
+                              "password": _password == null ? 'asd' : _password,
+                              "address": _address == null ? widget.address : _address,
+                              "jenis_kelamin": jenis_kelamin == null ? widget.jenisKelamin : jenis_kelamin,
+                              "tanggal_lahir": tanggal_lahir.text == '' ? widget.tanggalLahir : tanggal_lahir.text,
+                              "nama_ortu": _nama_ortu == null ? widget.namaOrtu : _nama_ortu,
+                              "bb_lahir": _bb_lahir == null ? widget.bbLahir : _bb_lahir,
+                              "tb_lahir": _tb_lahir == null ? widget.tbLahir: _tb_lahir,
+                            };
+                            // print(data);
+                            http.Response response =
+                                await _client.post(_userUrl, body: data);
+                            print(response.body);
+                            if (response.statusCode == 200) {
+                              // ignore: non_constant_identifier_names
+
+                              EasyLoading.dismiss();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const DatabAyiPage(),
+                                ),
+                              );
+                              // var Users = jsonDecode(response.body);
+                              // print(Users);
+                            } else {
+                              EasyLoading.showError('Insert Gagal');
+                              EasyLoading.dismiss();
+                            }
                           }
                         },
                         child: Container(

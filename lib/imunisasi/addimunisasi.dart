@@ -15,7 +15,8 @@ class AddImunisasi extends StatefulWidget {
 
 class _AddImunisasiState extends State<AddImunisasi> {
   late String anakke;
-  late String jenisVaksin;
+  var jenisVaksin;
+  // late String selected = '';
   var getIdOrtu;
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
@@ -46,6 +47,8 @@ class _AddImunisasiState extends State<AddImunisasi> {
 
     // getagentTo();
   }
+final surveyDateController = TextEditingController(text: '');
+ 
 
   @override
   void dispose() {
@@ -55,6 +58,21 @@ class _AddImunisasiState extends State<AddImunisasi> {
 
   TextEditingController jadwalMendatang = TextEditingController();
   TextEditingController tanggalVaksin = TextEditingController();
+
+  final List<String> nameList = <String>[
+      "imunisasi Bcg Polio",
+      "imunisasi DPT-HB-Hib 1 polio 2",
+      "imunisasi DPT-HB-Hib 2 polio 3",
+      "imunisasi DPT-HB-Hib 3 polio 4",
+      "imunisasi Campak",
+      "imunisasi DPT-HB-Hib 1 dosis",
+      "imunisasi Campak Rubella 1 dosis",
+      "imunisasi Campak Rubella dan DT",
+      "imunisasi Tethanus Diphteria TD",
+      "imunisasi Pneumococcal Conjugate Vaccine(PCV)",
+      "imunisasi Rotavirus",
+      "imunisasi Human Papilloma Virus(HPV)",
+    ];
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -88,9 +106,7 @@ class _AddImunisasiState extends State<AddImunisasi> {
                       isExpanded: true,
                       items: getuserOrtuTerima.map((item) {
                         return DropdownMenuItem(
-                            value: item['id'],
-                            child:
-                                Text('Nama Bayi: ${item['name']} - Nama Ortu: ${item['nama_ortu']}'));
+                            value: item['id'], child: Text('${item['name']}'));
                       }).toList(),
                       validator: (value) {
                         if (value == null) return 'Silahkan Masukan Data';
@@ -100,8 +116,11 @@ class _AddImunisasiState extends State<AddImunisasi> {
                       onChanged: (value) => setState(
                         () {
                           if (value != null) getIdOrtu = value;
+                          
+                          // print(selected);
                         },
                       ),
+                      
                     ),
                     const SizedBox(
                       height: 10,
@@ -134,6 +153,33 @@ class _AddImunisasiState extends State<AddImunisasi> {
                         }
                       },
                     ),
+                    // const SizedBox(
+                    //   height: 10,
+                    // ),
+                    // // TextFormField(
+                    //   initialValue: getIdOrtu.toString(),
+                    //   readOnly: true,
+                    //   obscureText: false,
+                    //   validator: (value) {
+                    //     if (value == null || value.isEmpty) {
+                    //       return 'Masukan Nama Ortu';
+                    //     }
+                    //     return null;
+                    //   },
+                    //   maxLines: 1,
+                    //   decoration: InputDecoration(
+                    //       border: OutlineInputBorder(
+                    //         borderRadius: BorderRadius.circular(10.0),
+                    //       ),
+                    //       prefixIcon: const Icon(Icons.person_2_sharp),
+                    //       labelText: 'Masukan Nama Orang Tua',
+                    //       hintText: 'Masukan Nama Orang Tua'),
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       var nama_ortu = value;
+                    //     });
+                    //   },
+                    // ),
                     const SizedBox(
                       height: 10,
                     ),
@@ -163,25 +209,30 @@ class _AddImunisasiState extends State<AddImunisasi> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Jenis Vaksin';
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
+                    DropdownButtonFormField(
                       decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.man_2),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          prefixIcon: const Icon(Icons.panorama_horizontal),
-                          labelText: 'Masukan Jenis Vaksin',
-                          hintText: 'Masukan Jenis Vaksin'),
-                      onChanged: (value) {
+                          hintText: 'Jenis Vaksin'),
+                      isExpanded: true,
+                      items: nameList.map(
+                        (item) {
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Text(item),
+                          );
+                        },
+                      ).toList(),
+                      validator: (value) {
+                        if (value == null) return 'Silahkan Masukan Data';
+                        return null;
+                      },
+                      value: jenisVaksin,
+                      onChanged: (vale) {
                         setState(() {
-                          jenisVaksin = value;
+                          jenisVaksin = vale;
                         });
                       },
                     ),
