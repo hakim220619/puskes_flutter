@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:puskes/databayi/databayi.dart';
+import 'package:puskes/imunisasi/imunisasiPage.dart';
 import 'package:puskes/keluhan/listKeluhanUsers.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:puskes/konsultasi/listKonsultasi.dart';
@@ -295,11 +297,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const KelasPage(keyword: 'nilai')));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ListImunisasi()));
                         // }
                       },
                     ),
@@ -316,11 +318,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const KelasPage(keyword: 'nilai')));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const DatabAyiPage()));
                         // }
                       },
                     ),
