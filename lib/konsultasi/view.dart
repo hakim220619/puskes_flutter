@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:audioplayers/audioplayers.dart';
 import "package:cached_network_image/cached_network_image.dart";
+import 'package:puskes/home/HomePage.dart';
 import 'package:puskes/konsultasi/httpserviceChat.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -31,8 +32,9 @@ class _KonsultasiOrtuState extends State<KonsultasiOrtu> {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var token = preferences.getString('token');
+      var id = preferences.getString('id');
       var url =
-          Uri.parse('${dotenv.env['url']}/messages?id_admin=1&id_ortu=13');
+          Uri.parse('${dotenv.env['url']}/messages?id_admin=1&id_ortu=$id');
       final response = await http.get(url, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer $token",
@@ -77,6 +79,18 @@ class _KonsultasiOrtuState extends State<KonsultasiOrtu> {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
+        leading: InkWell(
+              onTap: () {
+                Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Homepage()));
+              },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Color.fromARGB(253, 255, 252, 252),
+              ),
+            ),
         backgroundColor: Colors.blue,
       ),
       body: Stack(

@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:profile/profile.dart';
 import 'package:puskes/databayi/databayi.dart';
 import 'package:puskes/imunisasi/imunisasiPage.dart';
+import 'package:puskes/imunisasi/imunisasiusers.dart';
 import 'package:puskes/keluhan/listKeluhanUsers.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:puskes/konsultasi/listKonsultasi.dart';
@@ -21,7 +24,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
 
-  static const appTitle = 'Siakad';
+  static const appTitle = 'Puskes';
 
   @override
   Widget build(BuildContext context) {
@@ -45,38 +48,60 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   String counter2 = '265';
+  late SharedPreferences profileData;
+  List _listsData = [];
+  String nameU = '';
+  String? name;
+  String? role;
+  String? email;
+  String emailU = '';
+  String addressU = '';
+  Future<dynamic> ListUsersById() async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var token = preferences.getString('token');
+      var url = Uri.parse('${dotenv.env['url']}/me');
+      final response = await http.get(url, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      });
+      // print(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // print(data);
+        setState(() {
+          
+          nameU = data['data'][0]['name'];
+          emailU = data['data'][0]['email'];
+          addressU = data['data'][0]['address'];
+          print(nameU);
+        });
+      }
+    } catch (e) {
+      // print(e);
+    }
+  }
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1: Nilai',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: Jadwal',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 3: Chat',
-      style: optionStyle,
-    ),
-  ];
+  @override
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initial();
+    ListUsersById();
+  }
 
-  void _onItemTapped(int index) async {
+  void initial() async {
+    profileData = await SharedPreferences.getInstance();
     setState(() {
-      _selectedIndex = index;
+      name = profileData.getString('name');
+      role = profileData.getString('role');
+      email = profileData.getString('email');
     });
   }
 
-  String? name;
-  String? role;
+ 
 
-  late SharedPreferences profileData;
   static final _client = http.Client();
   static final _logoutUrl = Uri.parse('${dotenv.env['url']}/logout');
 
@@ -155,22 +180,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    initial();
-  }
-
-  void initial() async {
-    profileData = await SharedPreferences.getInstance();
-    setState(() {
-      name = profileData.getString('name');
-      role = profileData.getString('role');
-     
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -198,7 +207,95 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: Center(
-        child: _widgetOptions[_selectedIndex],
+        child: Card(
+          // Set the shape of the card using a rounded rectangle border with a 8 pixel radius
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          // Set the clip behavior of the card
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          // Define the child widgets of the card
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                height: 20,
+              ),
+              // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
+              Image.asset(
+                'assets/images/users.png',
+                height: 230,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              // Add a container with padding that contains the card's title, text, and buttons
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Display the card's title using a font size of 24 and a dark grey color
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: Colors.grey[800],
+                      ),
+                    ),
+                    // Add a space between the title and the text
+                    Container(height: 10),
+                    // Display the card's text using a font size of 15 and a light grey color
+                    Text(
+                      'Nama: ${nameU}',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    Text(
+                      "Alamat: $emailU",
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    // Add a row with two buttons spaced apart and aligned to the right side of the card
+                    // Row(
+                    //   children: <Widget>[
+                    //     // Add a spacer to push the buttons to the right side of the card
+                    //     const Spacer(),
+                    //     // Add a text button labeled "SHARE" with transparent foreground color and an accent color for the text
+                    //     TextButton(
+                    //       style: TextButton.styleFrom(
+                    //         foregroundColor: Colors.transparent,
+                    //       ),
+                    //       child: const Text(
+                    //         "SHARE",
+                    //         style: TextStyle(color: Colors.amber),
+                    //       ),
+                    //       onPressed: () {},
+                    //     ),
+                    //     // Add a text button labeled "EXPLORE" with transparent foreground color and an accent color for the text
+                    //     TextButton(
+                    //       style: TextButton.styleFrom(
+                    //         foregroundColor: Colors.transparent,
+                    //       ),
+                    //       child: const Text(
+                    //         "EXPLORE",
+                    //         style: TextStyle(color: Colors.black),
+                    //       ),
+                    //       onPressed: () {},
+                    //     ),
+                    //   ],
+                    // ),
+                  ],
+                ),
+              ),
+              // Add a small space between the card and the next widget
+              Container(height: 5),
+            ],
+          ),
+        ),
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -220,7 +317,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 0,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(0);
+                        // _onItemTapped(0);
                         // Then close the drawer
                         Navigator.pop(context);
                       },
@@ -230,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -238,10 +335,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListKonsultasi()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ListKonsultasi()));
                         // }
                       },
                     ),
@@ -250,7 +347,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -258,11 +355,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ListKeluhanUsers()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ListKeluhanUsers()));
                         // }
                       },
                     ),
@@ -271,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -279,11 +376,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ListUsers()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ListUsers()));
                         // }
                       },
                     ),
@@ -292,7 +388,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -300,11 +396,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ListImunisasi()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const ListImunisasi()));
                         // }
                       },
                     ),
@@ -313,7 +408,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -321,11 +416,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const DatabAyiPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DatabAyiPage()));
                         // }
                       },
                     ),
@@ -338,7 +432,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 0,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(0);
+                        // _onItemTapped(0);
                         // Then close the drawer
                         Navigator.pop(context);
                       },
@@ -348,7 +442,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 1,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(1);
+                        // _onItemTapped(1);
                         // Then close the drawer
                         // if (roleid == '3') {
                         //   Navigator.push(
@@ -356,11 +450,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
                         // } else if (roleid == '2') {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PenimbanganPageUsers()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const PenimbanganPageUsers()));
                         // }
                       },
                     ),
@@ -369,7 +463,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 2,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(2);
+                        // _onItemTapped(2);
                         // Then close the drawer
 
                         // if (roleid == '3') {
@@ -378,11 +472,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         //       MaterialPageRoute(
                         //           builder: (context) => const KelasPage(keyword: 'jadwalpelajaranSiswa')));
                         // } else if (roleid == '2') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) =>
-                        //               const KelasPage(keyword: 'jadwalpelajaran')));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ImunisasiUsersById()));
                         // }
                       },
                     ),
@@ -391,13 +485,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 3,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(3);
+                        // _onItemTapped(3);
                         // Then close the drawer
                         Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                       KonsultasiOrtu()));
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => KonsultasiOrtu()));
                       },
                     ),
                     ListTile(
@@ -405,13 +498,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       selected: _selectedIndex == 3,
                       onTap: () {
                         // Update the state of the app
-                        _onItemTapped(3);
+                        // _onItemTapped(3);
                         // Then close the drawer
-                         Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const KeluhanPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const KeluhanPage()));
                       },
                     ),
                   ])

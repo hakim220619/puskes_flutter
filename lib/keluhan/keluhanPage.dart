@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:puskes/home/HomePage.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -72,6 +73,18 @@ class _KeluhanPageState extends State<KeluhanPage> {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
+        leading: InkWell(
+              onTap: () {
+                Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Homepage()));
+              },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Color.fromARGB(253, 255, 252, 252),
+              ),
+            ),
         backgroundColor: Colors.blue[300],
       ),
       body: RefreshIndicator(
