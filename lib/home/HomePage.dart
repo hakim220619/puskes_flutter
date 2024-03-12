@@ -70,11 +70,9 @@ class _MyHomePageState extends State<MyHomePage> {
         final data = jsonDecode(response.body);
         // print(data);
         setState(() {
-          
           nameU = data['data'][0]['name'];
           emailU = data['data'][0]['email'];
           addressU = data['data'][0]['address'];
-          print(nameU);
         });
       }
     } catch (e) {
@@ -224,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
               // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
               Image.asset(
                 'assets/images/users.png',
-                height: 230,
+                height: 250,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),

@@ -99,7 +99,7 @@ class _KonsultasiAdminState extends State<KonsultasiAdmin> {
                   // DateChip(
                   //   date: new DateTime(now.year, now.month, now.day - 2),
                   // ),
-                  _listsData[index]['flag'] == 1
+                  _listsData[index]['flag'] == '1'
                       ? BubbleNormal(
                           text: _listsData[index]['msg'],
                           isSender: false,
@@ -111,7 +111,7 @@ class _KonsultasiAdminState extends State<KonsultasiAdmin> {
                           ),
                         )
                       : const Text(''),
-                  _listsData[index]['flag'] == 2
+                  _listsData[index]['flag'] == '2'
                       ? BubbleSpecialTwo(
                           text: _listsData[index]['msg'],
                           isSender: true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:puskes/home/HomePage.dart';
 import 'package:puskes/imunisasi/addimunisasi.dart';
+import 'package:puskes/imunisasi/deleteImunisasi.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -58,12 +59,8 @@ class _ListImunisasiState extends State<ListImunisasi> {
   }
 
   void addImunisasi() {
-Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const AddImunisasi()));
-    
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const AddImunisasi()));
   }
 
   @override
@@ -76,52 +73,56 @@ Navigator.push(
         ),
         centerTitle: true,
         leading: InkWell(
-              onTap: () {
-                Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Homepage()));
-              },
-              child: const Icon(
-                Icons.arrow_back_ios,
-                color: Color.fromARGB(253, 255, 252, 252),
-              ),
-            ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Homepage()));
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Color.fromARGB(253, 255, 252, 252),
+          ),
+        ),
         backgroundColor: Colors.blue[300],
       ),
       body: RefreshIndicator(
         onRefresh: refresh,
         child: ListView.builder(
           itemCount: _listsData.length,
-             physics: const NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) => Card(
             margin: const EdgeInsets.all(10.0),
             child: Column(
               children: [
                 ListTile(
-                        title: Text(
-                          "Nama: ${_listsData[index]['name']}",
-                          style: const TextStyle(
-                              fontSize: 15.0, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(
-                          "Jenis Vaksin: ${_listsData[index]['jenis_vaksin']} \nVaksin Berikutnya: ${_listsData[index]['jadwal_mendatang']}",
-                          maxLines: 2,
-                          style: const TextStyle(fontSize: 14.0),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => KonsultasiAdmin(id_ortu: _listsData[index]['id_ortu'].toString(),),
+                  title: Text(
+                    "Nama: ${_listsData[index]['name']}",
+                    style: const TextStyle(
+                        fontSize: 15.0, fontWeight: FontWeight.bold),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text(
+                    "Jenis Vaksin: ${_listsData[index]['jenis_vaksin']} \nVaksin Berikutnya: ${_listsData[index]['jadwal_mendatang']}",
+                    maxLines: 2,
+                    style: const TextStyle(fontSize: 14.0),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ImunisasiUsersAdminById(
+                            id: _listsData[index]['id'].toString(),
+                            name: _listsData[index]['name'].toString(),
+                            jenis_vaksin: _listsData[index]['jenis_vaksin'].toString(),
+                            tanggal_vaksin: _listsData[index]['tanggal_vaksin'].toString(),
+                            anak_ke: _listsData[index]['anak_ke'].toString(),
+                            jadwal_mendatang: _listsData[index]['jadwal_mendatang'].toString(),
                             ),
-                          );
-                        },
-                      
-                    )
+                      ),
+                    );
+                  },
+                )
               ],
             ),
           ),
@@ -131,8 +132,7 @@ Navigator.push(
         onPressed: addImunisasi,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // 
+      ), //
     );
-    
   }
 }

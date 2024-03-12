@@ -20,7 +20,7 @@ class ListKonsultasi extends StatefulWidget {
 List _listsData = [];
 
 class _ListKonsultasiState extends State<ListKonsultasi> {
-  Future<dynamic> listKeluhan() async {
+  Future<dynamic> listKonsultasi() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var token = preferences.getString('token');
@@ -47,12 +47,12 @@ class _ListKonsultasiState extends State<ListKonsultasi> {
   @override
   void initState() {
     super.initState();
-    listKeluhan();
+    listKonsultasi();
   }
 
   Future refresh() async {
     setState(() {
-      listKeluhan();
+      listKonsultasi();
     });
   }
 
