@@ -17,30 +17,33 @@ class PenimbanganPageUsers extends StatefulWidget {
 
 class _PenimbanganPageUsersState extends State<PenimbanganPageUsers> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-List _listsData = [];
-Future<dynamic> ListUsersById() async {
-    try {
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      var token = preferences.getString('token');
-      var url = Uri.parse('${dotenv.env['url']}/liestUserById');
-      final response = await http.get(url, headers: {
-        "Accept": "application/json",
-        "Authorization": "Bearer $token",
-      });
-      // print(response.body);
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        // print(data);
-        setState(() {
-          _listsData = data['data'];
-           print(_listsData[0]['tb_lahir']);
-         
-        });
-      }
-    } catch (e) {
-      // print(e);
-    }
-  }
+  List _listsData = [];
+
+  // Future<dynamic> ListUsersById() async {
+  //   try {
+  //     SharedPreferences preferences = await SharedPreferences.getInstance();
+  //     var token = preferences.getString('token');
+  //     var url = Uri.parse('${dotenv.env['url']}/liestUserById');
+  //     final response = await http.get(url, headers: {
+  //       "Accept": "application/json",
+  //       "Authorization": "Bearer $token",
+  //     });
+  //     // print(response.body);
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+  //       // print(data);
+  //       setState(() {
+  //         _listsData = data['data'];
+  //         bb_lahir = _listsData[0]['bb_lahir'];
+  //         tb_lahir = _listsData[0]['tb_lahir'];
+  //         print(_listsData[0]['tb_lahir']);
+  //       });
+  //     }
+  //   } catch (e) {
+  //     // print(e);
+  //   }
+  // }
+
   @override
   void dispose() {
     _formKey.currentState?.dispose();
@@ -48,16 +51,22 @@ Future<dynamic> ListUsersById() async {
   }
 
   late SharedPreferences profileData;
-  String? bb_lahir;
-  String? tb_lahir;
   @override
- void initState() {
+  void initState() {
     // TODO: implement initState
     super.initState();
-    ListUsersById();
+    initial();
   }
-
-  
+  String? bb_lahir;
+  var tb_lahir;
+  void initial() async {
+    profileData = await SharedPreferences.getInstance();
+    setState(() {
+      
+      bb_lahir = profileData.getString('bb_lahir');
+      tb_lahir = profileData.getString('tb_lahir');
+    });
+  }
 
   TextEditingController tanggal_lahir = TextEditingController();
 
@@ -80,9 +89,11 @@ Future<dynamic> ListUsersById() async {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    
                     TextFormField(
+                      readOnly: true,
                       obscureText: false,
-                      initialValue: _listsData[0]['bb_lahir'].toString(),
+                      initialValue: profileData.getString('bb_lahir'),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Masukan Berat Badan';
@@ -90,7 +101,7 @@ Future<dynamic> ListUsersById() async {
                         return null;
                       },
                       maxLines: 1,
-                      keyboardType: TextInputType.number,
+                 
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -103,7 +114,8 @@ Future<dynamic> ListUsersById() async {
                       height: 10,
                     ),
                     TextFormField(
-                      initialValue:  _listsData[0]['tb_lahir'].toString(),
+                      readOnly: true,
+                      initialValue: profileData.getString('tb_lahir'),
                       obscureText: false,
                       validator: (value) {
                         if (value == null || value.isEmpty) {

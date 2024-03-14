@@ -79,14 +79,14 @@ class _ListKeluhanAdminByIdState extends State<ListKeluhanAdminById> {
               children: [
                 ListTile(
                   title: Text(
-                    "${_listsData[index]['pertanyaan']}",
+                    "Pertanyaan: ${_listsData[index]['pertanyaan']}",
                     style: const TextStyle(
                         fontSize: 15.0, fontWeight: FontWeight.bold),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
-                    "${_listsData[index]['created_at']}",
+                    "Dibuat: ${_listsData[index]['created_at']}",
                     maxLines: 2,
                     style: const TextStyle(fontSize: 14.0),
                     overflow: TextOverflow.ellipsis,

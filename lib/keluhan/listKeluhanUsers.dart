@@ -68,17 +68,15 @@ class _ListKeluhanUsersState extends State<ListKeluhanUsers> {
         ),
         centerTitle: true,
         leading: InkWell(
-              onTap: () {
-                Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Homepage()));
-              },
-              child: const Icon(
-                Icons.arrow_back_ios,
-                color: Color.fromARGB(253, 255, 252, 252),
-              ),
-            ),
+          onTap: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const Homepage()));
+          },
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: Color.fromARGB(253, 255, 252, 252),
+          ),
+        ),
         backgroundColor: Colors.blue[300],
       ),
       body: RefreshIndicator(
@@ -87,42 +85,30 @@ class _ListKeluhanUsersState extends State<ListKeluhanUsers> {
           itemCount: _listsData.length,
           itemBuilder: (context, index) => Card(
             margin: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                ListView.builder(
-                  itemCount: 1,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(
-                        "${_listsData[index]['name']}",
-                        style: const TextStyle(
-                            fontSize: 15.0, fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      subtitle: Text(
-                        "${_listsData[index]['nik']}",
-                        maxLines: 2,
-                        style: const TextStyle(fontSize: 14.0),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      onTap: () {
-                        
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ListKeluhanAdminById(
-                                id: _listsData[index]['id_ortu'].toString(),
-                                  ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+            child: ListTile(
+              title: Text(
+                "${_listsData[index]['name']}",
+                style: const TextStyle(
+                    fontSize: 15.0, fontWeight: FontWeight.bold),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                "${_listsData[index]['nik']}",
+                maxLines: 2,
+                style: const TextStyle(fontSize: 14.0),
+                overflow: TextOverflow.ellipsis,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ListKeluhanAdminById(
+                      id: _listsData[index]['id_ortu'].toString(),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),

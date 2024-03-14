@@ -42,6 +42,47 @@ class HttpServiceImunisasi {
     }
   }
 
+  static final _imunisasiUpdateUrl =
+      Uri.parse('${dotenv.env['url']}/updateImunisasi');
+
+  static updateImunisasi(id, tanggalVaksin,anakke, jenisVaksin,  jadwalMendatang, context) async {
+    print(id);
+    print(tanggalVaksin);
+    print(anakke);
+    print(jenisVaksin);
+    print(jadwalMendatang);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    var token = preferences.getString('token');
+    EasyLoading.show(status: 'loading...');
+    http.Response response = await _client.post(_imunisasiUpdateUrl, body: {
+      "id": id,
+      "tanggal_vaksin": tanggalVaksin,
+      "anak_ke": anakke.toString(),
+      "jenis_vaksin": jenisVaksin,
+      "jadwal_mendatang": jadwalMendatang
+    }, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    });
+    print(response.body);
+    if (response.statusCode == 200) {
+      // ignore: non_constant_identifier_names
+
+      EasyLoading.dismiss();
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const ListImunisasi(),
+        ),
+      );
+      // var Users = jsonDecode(response.body);
+      // print(Users);
+    } else {
+      EasyLoading.showError('Insert Gagal');
+      EasyLoading.dismiss();
+    }
+  }
+
   static final _imunisasideleteUrl =
       Uri.parse('${dotenv.env['url']}/deleteImunisasi');
   static delete(id, context) async {

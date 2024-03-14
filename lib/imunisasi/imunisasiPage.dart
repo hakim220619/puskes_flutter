@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:puskes/home/HomePage.dart';
 import 'package:puskes/imunisasi/addimunisasi.dart';
-import 'package:puskes/imunisasi/deleteImunisasi.dart';
+import 'package:puskes/imunisasi/updateImunisasi.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,7 +37,7 @@ class _ListImunisasiState extends State<ListImunisasi> {
         // print(data);
         setState(() {
           _listsData = data['data'];
-          // print(_listsData);
+          print(_listsData);
         });
       }
     } catch (e) {
