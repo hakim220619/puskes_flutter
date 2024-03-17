@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:puskes/home/HomePage.dart';
-import 'package:puskes/keluhan/addJabawanAdmin.dart';
+import 'package:puskes/keluhan/verifikasiadmin.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:puskes/keluhan/listKeluhanById.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';

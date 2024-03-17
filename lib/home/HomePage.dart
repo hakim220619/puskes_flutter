@@ -52,8 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
   List _listsData = [];
   String nameU = '';
   String? name;
+  String? nik;
   String? role;
   String? email;
+  String? jenis_kelamin;
   String emailU = '';
   String addressU = '';
   Future<dynamic> ListUsersById() async {
@@ -92,8 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
     profileData = await SharedPreferences.getInstance();
     setState(() {
       name = profileData.getString('name');
+      nik = profileData.getString('nik');
       role = profileData.getString('role');
       email = profileData.getString('email');
+      jenis_kelamin = profileData.getString('jenis_kelamin');
     });
   }
 
@@ -116,6 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           preferences.remove("id");
           preferences.remove("name");
+          preferences.remove("nik");
           preferences.remove("email");
           preferences.remove("role");
           preferences.remove("address");
@@ -207,103 +212,147 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         ],
       ),
-      body: Center(
-        child: Card(
-          // Set the shape of the card using a rounded rectangle border with a 8 pixel radius
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          // Set the clip behavior of the card
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          // Define the child widgets of the card
-          child: RefreshIndicator(
-            onRefresh: refresh,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
-                // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
-                Image.asset(
-                  'assets/images/users.png',
-                  height: 250,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                // Add a container with padding that contains the card's title, text, and buttons
-                Container(
-                  padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      // Display the card's title using a font size of 24 and a dark grey color
-                      Text(
-                        "Profile",
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.grey[800],
-                        ),
-                      ),
-                      // Add a space between the title and the text
-                      Container(height: 10),
-                      // Display the card's text using a font size of 15 and a light grey color
-                      Text(
-                        'Nama: ${name}',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      Text(
-                        "Email: $email",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      Text(
-                        "Role: ${role == '1' ? 'Admin' : 'Orang tua'}",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      // Add a row with two buttons spaced apart and aligned to the right side of the card
-                      // Row(
-                      //   children: <Widget>[
-                      //     // Add a spacer to push the buttons to the right side of the card
-                      //     const Spacer(),
-                      //     // Add a text button labeled "SHARE" with transparent foreground color and an accent color for the text
-                      //     TextButton(
-                      //       style: TextButton.styleFrom(
-                      //         foregroundColor: Colors.transparent,
-                      //       ),
-                      //       child: const Text(
-                      //         "SHARE",
-                      //         style: TextStyle(color: Colors.amber),
-                      //       ),
-                      //       onPressed: () {},
-                      //     ),
-                      //     // Add a text button labeled "EXPLORE" with transparent foreground color and an accent color for the text
-                      //     TextButton(
-                      //       style: TextButton.styleFrom(
-                      //         foregroundColor: Colors.transparent,
-                      //       ),
-                      //       child: const Text(
-                      //         "EXPLORE",
-                      //         style: TextStyle(color: Colors.black),
-                      //       ),
-                      //       onPressed: () {},
-                      //     ),
-                      //   ],
-                      // ),
-                    ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Card(
+            // Set the shape of the card using a rounded rectangle border with a 8 pixel radius
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            // Set the clip behavior of the card
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            // Define the child widgets of the card
+            child: RefreshIndicator(
+              onRefresh: refresh,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
+                  Image.asset(
+                    'assets/images/users.png',
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                ),
-                // Add a small space between the card and the next widget
-                Container(height: 5),
-              ],
+                  // Add a container with padding that contains the card's title, text, and buttons
+                  Container(
+                    padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        // Display the card's title using a font size of 24 and a dark grey color
+                        Center(
+                          child: Text(
+                            "Profile",
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.grey[800],
+                            ),
+                          ),
+                        ),
+                        // Add a space between the title and the text
+
+                        // Display the card's text using a font size of 15 and a light grey color
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          child: TextField(
+                            readOnly: true,
+                            controller:
+                                TextEditingController(text: name.toString()),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Nama'),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                          child: TextField(
+                            readOnly: true,
+                            controller:
+                                TextEditingController(text: nik.toString()),
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Nik'),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                          child: TextField(
+                            readOnly: true,
+                            controller:
+                                TextEditingController(text: email.toString()),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Email'),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                          child: TextField(
+                            readOnly: true,
+                            controller: TextEditingController(
+                                text: role == '1'
+                                    ? 'Admin'
+                                    : role == '2'
+                                        ? 'Orang tua'
+                                        : 'Bidan'),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Role'),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 5),
+                          child: TextField(
+                            readOnly: true,
+                            controller: TextEditingController(
+                                text: jenis_kelamin.toString()),
+                            decoration: const InputDecoration(
+                                border: OutlineInputBorder(),
+                                labelText: 'Jenis Kelamin'),
+                          ),
+                        ),
+                        // Add a row with two buttons spaced apart and aligned to the right side of the card
+                        // Row(
+                        //   children: <Widget>[
+                        //     // Add a spacer to push the buttons to the right side of the card
+                        //     const Spacer(),
+                        //     // Add a text button labeled "SHARE" with transparent foreground color and an accent color for the text
+                        //     TextButton(
+                        //       style: TextButton.styleFrom(
+                        //         foregroundColor: Colors.transparent,
+                        //       ),
+                        //       child: const Text(
+                        //         "SHARE",
+                        //         style: TextStyle(color: Colors.amber),
+                        //       ),
+                        //       onPressed: () {},
+                        //     ),
+                        //     // Add a text button labeled "EXPLORE" with transparent foreground color and an accent color for the text
+                        //     TextButton(
+                        //       style: TextButton.styleFrom(
+                        //         foregroundColor: Colors.transparent,
+                        //       ),
+                        //       child: const Text(
+                        //         "EXPLORE",
+                        //         style: TextStyle(color: Colors.black),
+                        //       ),
+                        //       onPressed: () {},
+                        //     ),
+                        //   ],
+                        // ),
+                      ],
+                    ),
+                  ),
+                  // Add a small space between the card and the next widget
+                  Container(height: 5),
+                ],
+              ),
             ),
           ),
         ),
@@ -519,6 +568,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ])
                 : const Text(''),
+            role == '3'
+                ? Column(children: [
+                    ListTile(
+                      title: const Text('Home'),
+                      selected: _selectedIndex == 0,
+                      onTap: () {
+                        // Update the state of the app
+                        // _onItemTapped(0);
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Keluhan'),
+                      selected: _selectedIndex == 0,
+                      onTap: () {
+                        // Update the state of the app
+                        // _onItemTapped(0);
+                        // Then close the drawer
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ListKeluhanUsers()));
+                      },
+                    )
+                  ])
+                : const Text('')
           ],
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:puskes/keluhan/addJabawanAdmin.dart';
+import 'package:puskes/keluhan/verifikasiadmin.dart';
 import 'package:puskes/keluhan/addkeluhanPage.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +50,15 @@ class _ListKeluhanAdminByIdState extends State<ListKeluhanAdminById> {
     listKeluhan();
   }
 
+  late SharedPreferences profileData;
+  String? role;
+  void initial() async {
+    profileData = await SharedPreferences.getInstance();
+    setState(() {
+      role = profileData.getString('role');
+    });
+  }
+
   Future refresh() async {
     setState(() {
       listKeluhan();
@@ -95,9 +104,19 @@ class _ListKeluhanAdminByIdState extends State<ListKeluhanAdminById> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AddJawabanPage(
+                        builder: (context) => VerifikasiAdmin(
+                            verifikasi:
+                                _listsData[index]['verifikasi'].toString(),
                             pertanyaan:
                                 _listsData[index]['pertanyaan'].toString(),
+                            nama_ortu:
+                                _listsData[index]['nama_ortu'].toString(),
+                            name: _listsData[index]['name'].toString(),
+                            jenis_kelamin:
+                                _listsData[index]['jenis_kelamin'].toString(),
+                            tanggal_lahir:
+                                _listsData[index]['tanggal_lahir'].toString(),
+                            nik: _listsData[index]['nik'].toString(),
                             id_ortu: _listsData[index]['id_ortu'].toString(),
                             id: _listsData[index]['id'].toString()),
                       ),

@@ -31,6 +31,7 @@ class HttpService {
       await pref.setString("email", email);
       await pref.setString("id", Users['userData']['id'].toString());
       await pref.setString("name", Users['userData']['name'].toString());
+      await pref.setString("nik", Users['userData']['nik'].toString());
       await pref.setString("role", Users['userData']['role'].toString());
       await pref.setString("address", Users['userData']['address'].toString());
       await pref.setString(
