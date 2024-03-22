@@ -7,6 +7,7 @@ import 'package:puskes/databayi/databayi.dart';
 import 'package:puskes/imunisasi/imunisasiPage.dart';
 import 'package:puskes/imunisasi/imunisasiusers.dart';
 import 'package:puskes/keluhan/listKeluhanUsers.dart';
+import 'package:puskes/kms/kms.dart';
 import 'package:puskes/konsultasi/konsultasiAdmin.dart';
 import 'package:puskes/konsultasi/listKonsultasi.dart';
 import 'package:puskes/konsultasi/view.dart';
@@ -399,6 +400,26 @@ class _MyHomePageState extends State<MyHomePage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => ListKonsultasi()));
+                        // }
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Kms'),
+                      selected: _selectedIndex == 1,
+                      onTap: () {
+                        // Update the state of the app
+                        // _onItemTapped(1);
+                        // Then close the drawer
+                        // if (roleid == '3') {
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
+                        // } else if (roleid == '2') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChartPageKms()));
                         // }
                       },
                     ),

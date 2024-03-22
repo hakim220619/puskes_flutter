@@ -54,6 +54,7 @@ dependencies:
   modal_bottom_sheet: ^2.1.2
   profile: ^0.0.1
   url_launcher: ^6.2.5
+  syncfusion_flutter_charts: ^25.1.35
 
 dev_dependencies:
   flutter_test:
