@@ -374,7 +374,7 @@ class _MyHomePageState extends State<MyHomePage> {
             role == '1'
                 ? Column(children: [
                     ListTile(
-                      title: const Text('Home'),
+                      title: const Text('Profile'),
                       selected: _selectedIndex == 0,
                       onTap: () {
                         // Update the state of the app
@@ -509,7 +509,7 @@ class _MyHomePageState extends State<MyHomePage> {
             role == '2'
                 ? Column(children: [
                     ListTile(
-                      title: const Text('Home'),
+                      title: const Text('Profile'),
                       selected: _selectedIndex == 0,
                       onTap: () {
                         // Update the state of the app
