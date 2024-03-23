@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-
+import 'package:http/http.dart' as http;
 
 class ChartPageKms extends StatefulWidget {
   // ignore: prefer_const_constructors_in_immutables
@@ -11,14 +16,51 @@ class ChartPageKms extends StatefulWidget {
   ChartPageKmsState createState() => ChartPageKmsState();
 }
 
+List<_SalesData> data = [];
+
 class ChartPageKmsState extends State<ChartPageKms> {
-  List<_SalesData> data = [
-    _SalesData('35', 35),
-    _SalesData('28', 28),
-    _SalesData('34', 34),
-    _SalesData('32', 32),
-    _SalesData('40', 40)
-  ];
+  Future<dynamic> listKeluhan() async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var token = preferences.getString('token');
+      var url = Uri.parse('${dotenv.env['url']}/getGravikSiswa');
+      final response = await http.get(url, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      });
+      // print(response.body);
+      if (response.statusCode == 200) {
+        final dataAll = jsonDecode(response.body);
+        setState(() {
+          for (var da in dataAll['data']) {
+            print(da['bb_lahir']);
+            data.add(_SalesData(
+                '${da['name']}', double.parse('${(da['bb_lahir'])}')));
+          }
+        });
+      }
+    } catch (e) {
+      // print(e);
+    }
+  }
+
+  // Sample data for three lists
+  @override
+  void initState() {
+    super.initState();
+    listKeluhan();
+  }
+
+  @override
+  void dispose() {
+    data = [];
+    // ignore: avoid_print
+    print('Dispose used');
+    super.dispose();
+  }
+
+  //  List<_SalesData> data = [ _SalesData('asd', 40)];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
