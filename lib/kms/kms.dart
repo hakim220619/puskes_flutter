@@ -33,7 +33,6 @@ class ChartPageKmsState extends State<ChartPageKms> {
         final dataAll = jsonDecode(response.body);
         setState(() {
           for (var da in dataAll['data']) {
-            print(da['bb_lahir']);
             data.add(_SalesData(
                 '${da['name']}', double.parse('${(da['bb_lahir'])}')));
           }
@@ -55,7 +54,6 @@ class ChartPageKmsState extends State<ChartPageKms> {
   void dispose() {
     data = [];
     // ignore: avoid_print
-    print('Dispose used');
     super.dispose();
   }
 
