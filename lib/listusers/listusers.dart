@@ -11,6 +11,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../penimbangan/listPenimbanganbyId.dart';
+
 class ListUsers extends StatefulWidget {
   const ListUsers({
     Key? key,
@@ -38,7 +40,7 @@ class _ListUsersState extends State<ListUsers> {
         // print(data);
         setState(() {
           _listsData = data['data'];
-          print(_listsData);
+          // print(_listsData);
         });
       }
     } catch (e) {
@@ -92,14 +94,14 @@ class _ListUsersState extends State<ListUsers> {
               children: [
                 ListTile(
                       title: Text(
-                        "${_listsData[index]['name']}",
+                        "Nama: ${_listsData[index]['name']}",
                         style: const TextStyle(
                             fontSize: 15.0, fontWeight: FontWeight.bold),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       subtitle: Text(
-                        "BB ${_listsData[index]['bb_lahir']} TB ${_listsData[index]['tb_lahir']}",
+                        "Nama Ortu: ${_listsData[index]['nama_ortu']} \nTanggal Lahir: ${_listsData[index]['tanggal_lahir']}",
                         maxLines: 2,
                         style: const TextStyle(fontSize: 14.0),
                         overflow: TextOverflow.ellipsis,
@@ -109,16 +111,13 @@ class _ListUsersState extends State<ListUsers> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PenimbanganPage(
+                            builder: (context) => ListPenimbanganById(
                                 id: _listsData[index]['id'].toString(),
-                                bblahir: _listsData[index]['bb_lahir'].toString(),
-                                tblahir: _listsData[index]['tb_lahir'].toString(),
+
                                   ),
                           ),
                         );
                       },
-                    
-                  
                 ),
               ],
             ),

@@ -345,60 +345,7 @@ class _EditDataBayiState extends State<EditDataBayi> {
                     const SizedBox(
                       height: 10,
                     ),
-                    TextFormField(
-                      initialValue: widget.bbLahir,
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukan Berat Badan';
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          prefixIcon: const Icon(Icons.person_3_outlined),
-                          labelText: 'Masukan Berat badan',
-                          hintText: 'Masukan Berat badan'),
-                      onChanged: (value) {
-                        setState(() {
-                          _bb_lahir = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextFormField(
-                      initialValue: widget.tbLahir,
-                      obscureText: false,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Masukan Nik';
-                        }
-                        return null;
-                      },
-                      maxLines: 1,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          prefixIcon: const Icon(Icons.person_3_outlined),
-                          labelText: 'Masukan Tinggi Badan',
-                          hintText: 'Masukan Tinggi Badan'),
-                      onChanged: (value) {
-                        setState(() {
-                          _tb_lahir = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    
                     InkWell(
                         onTap: () async {
                           // print(_nama);
@@ -416,13 +363,11 @@ class _EditDataBayiState extends State<EditDataBayi> {
                               "jenis_kelamin": jenis_kelamin == null ? widget.jenisKelamin : jenis_kelamin,
                               "tanggal_lahir": tanggal_lahir.text == '' ? widget.tanggalLahir : tanggal_lahir.text,
                               "nama_ortu": _nama_ortu == null ? widget.namaOrtu : _nama_ortu,
-                              "bb_lahir": _bb_lahir == null ? widget.bbLahir : _bb_lahir,
-                              "tb_lahir": _tb_lahir == null ? widget.tbLahir: _tb_lahir,
                             };
                             // print(data);
                             http.Response response =
                                 await _client.post(_userUrl, body: data);
-                            print(response.body);
+                            // print(response.body);
                             if (response.statusCode == 200) {
                               // ignore: non_constant_identifier_names
 

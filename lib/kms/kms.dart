@@ -17,24 +17,52 @@ class ChartPageKms extends StatefulWidget {
 }
 
 List<_SalesData> data = [];
+List _listsData = [];
 
 class ChartPageKmsState extends State<ChartPageKms> {
-  Future<dynamic> listKeluhan() async {
+  Future<dynamic> ListUsers() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var token = preferences.getString('token');
-      var url = Uri.parse('${dotenv.env['url']}/getGravikSiswa');
+      var url = Uri.parse('${dotenv.env['url']}/listUsers');
       final response = await http.get(url, headers: {
         "Accept": "application/json",
         "Authorization": "Bearer $token",
       });
       // print(response.body);
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // print(data);
+        setState(() {
+          _listsData = data['data'];
+          print(_listsData);
+        });
+      }
+    } catch (e) {
+      // print(e);
+    }
+  }
+
+  Future<dynamic> GrafikAllUsers(id_user, tahun) async {
+    try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var token = preferences.getString('token');
+      var url = Uri.parse('${dotenv.env['url']}/getGravikSiswa');
+      final response = await http.post(url, body: {
+        'id': id_user.toString(),
+        'tahun': tahun.toString()
+      }, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      });
+      print(response.body);
+      if (response.statusCode == 200) {
         final dataAll = jsonDecode(response.body);
         setState(() {
           for (var da in dataAll['data']) {
+            print(da);
             data.add(_SalesData(
-                '${da['name']}', double.parse('${(da['bb_lahir'])}')));
+                '${da['nama_bulan']}', double.parse('${(da['bb_lahir'])}')));
           }
         });
       }
@@ -47,7 +75,7 @@ class ChartPageKmsState extends State<ChartPageKms> {
   @override
   void initState() {
     super.initState();
-    listKeluhan();
+    ListUsers();
   }
 
   @override
@@ -57,15 +85,81 @@ class ChartPageKmsState extends State<ChartPageKms> {
     super.dispose();
   }
 
+  String? users;
+  String? TahunContr;
   //  List<_SalesData> data = [ _SalesData('asd', 40)];
 
   @override
   Widget build(BuildContext context) {
+    final List<String> tahun = <String>[
+      "2023",
+      "2024",
+      "2025",
+      "2026",
+    ];
     return Scaffold(
         appBar: AppBar(
           title: const Text('Kms'),
         ),
         body: Column(children: [
+          DropdownButtonFormField(
+            padding: EdgeInsets.all(10),
+            decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.date_range),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: 'Tahun'),
+            isExpanded: true,
+            items: tahun.map(
+              (item) {
+                return DropdownMenuItem(
+                  value: item,
+                  child: Text(item),
+                );
+              },
+            ).toList(),
+            validator: (value) {
+              if (value == null) return 'Silahkan Masukan Data';
+              return null;
+            },
+            value: TahunContr,
+            onChanged: (vale) {
+              setState(() {
+                data = [];
+                GrafikAllUsers(users, vale);
+                TahunContr = vale;
+              });
+            },
+          ),
+
+          DropdownButtonFormField(
+            padding: EdgeInsets.all(10),
+            decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.man),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: 'Users'),
+            isExpanded: true,
+            items: _listsData.map((item) {
+              return DropdownMenuItem(
+                  value: item['id'].toString(),
+                  child: Text(item['name'].toString()));
+            }).toList(),
+            validator: (value) {
+              if (value == null) return 'Silahkan Masukan Data';
+              return null;
+            },
+            value: users,
+            onChanged: (vale) {
+              setState(() {
+                data = [];
+                GrafikAllUsers(vale, TahunContr);
+                users = vale;
+              });
+            },
+          ),
           //Initialize the chart widget
           SfCartesianChart(
               primaryXAxis: CategoryAxis(),

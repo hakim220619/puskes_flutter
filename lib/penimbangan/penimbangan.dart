@@ -4,8 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:puskes/penimbangan/servicePenimbangan.dart';
 
 class PenimbanganPage extends StatefulWidget {
-  const PenimbanganPage({Key? key, required this.id, required this.bblahir, required this.tblahir}) : super(key: key);
+  const PenimbanganPage({Key? key, required this.id, required this.id_user, required this.bblahir, required this.tblahir}) : super(key: key);
   final String id;
+  final String id_user;
   final String bblahir;
   final String tblahir;
 
@@ -97,7 +98,6 @@ class _PenimbanganPageState extends State<PenimbanganPage> {
                       onChanged: (value) {
                         setState(() {
                           tb_lahir = value;
-                          print(tb_lahir);
                         });
                       },
                     ),
@@ -109,8 +109,9 @@ class _PenimbanganPageState extends State<PenimbanganPage> {
                         onTap: () async {
                           if (_formKey.currentState!.validate()) {
                             await HttpServicePenimbangan.penimbangan(
-                                bb_lahir.toString(),
-                                tb_lahir.toString(),
+                              widget.id_user,
+                                bb_lahir == null ?  widget.bblahir : bb_lahir.toString(),
+                                tb_lahir == null ?  widget.tblahir : tb_lahir.toString(),
                                 widget.id,
                                 context);
                           }
