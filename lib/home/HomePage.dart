@@ -403,26 +403,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         // }
                       },
                     ),
-                    ListTile(
-                      title: const Text('Kms'),
-                      selected: _selectedIndex == 1,
-                      onTap: () {
-                        // Update the state of the app
-                        // _onItemTapped(1);
-                        // Then close the drawer
-                        // if (roleid == '3') {
-                        //   Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
-                        // } else if (roleid == '2') {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChartPageKms()));
-                        // }
-                      },
-                    ),
+                    
                     ListTile(
                       title: const Text('Keluhan'),
                       selected: _selectedIndex == 1,
@@ -516,6 +497,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         // _onItemTapped(0);
                         // Then close the drawer
                         Navigator.pop(context);
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Kms'),
+                      selected: _selectedIndex == 1,
+                      onTap: () {
+                        // Update the state of the app
+                        // _onItemTapped(1);
+                        // Then close the drawer
+                        // if (roleid == '3') {
+                        //   Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => const KelasPage(keyword: 'nilaisiswa')));
+                        // } else if (roleid == '2') {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChartPageKms()));
+                        // }
                       },
                     ),
                     ListTile(

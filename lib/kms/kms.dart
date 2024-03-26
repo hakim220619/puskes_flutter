@@ -43,10 +43,11 @@ class ChartPageKmsState extends State<ChartPageKms> {
     }
   }
 
-  Future<dynamic> GrafikAllUsers(id_user, tahun) async {
+  Future<dynamic> GrafikAllUsers(tahun) async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var token = preferences.getString('token');
+      var id_user = preferences.getString('id');
       var url = Uri.parse('${dotenv.env['url']}/getGravikSiswa');
       final response = await http.post(url, body: {
         'id': id_user.toString(),
@@ -55,12 +56,10 @@ class ChartPageKmsState extends State<ChartPageKms> {
         "Accept": "application/json",
         "Authorization": "Bearer $token",
       });
-      print(response.body);
       if (response.statusCode == 200) {
         final dataAll = jsonDecode(response.body);
         setState(() {
           for (var da in dataAll['data']) {
-            print(da);
             data.add(_SalesData(
                 '${da['nama_bulan']}', double.parse('${(da['bb_lahir'])}')));
           }
@@ -127,39 +126,13 @@ class ChartPageKmsState extends State<ChartPageKms> {
             onChanged: (vale) {
               setState(() {
                 data = [];
-                GrafikAllUsers(users, vale);
+                GrafikAllUsers(vale);
                 TahunContr = vale;
               });
             },
           ),
 
-          DropdownButtonFormField(
-            padding: EdgeInsets.all(10),
-            decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.man),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                hintText: 'Users'),
-            isExpanded: true,
-            items: _listsData.map((item) {
-              return DropdownMenuItem(
-                  value: item['id'].toString(),
-                  child: Text(item['name'].toString()));
-            }).toList(),
-            validator: (value) {
-              if (value == null) return 'Silahkan Masukan Data';
-              return null;
-            },
-            value: users,
-            onChanged: (vale) {
-              setState(() {
-                data = [];
-                GrafikAllUsers(vale, TahunContr);
-                users = vale;
-              });
-            },
-          ),
+          
           //Initialize the chart widget
           SfCartesianChart(
               primaryXAxis: CategoryAxis(),
