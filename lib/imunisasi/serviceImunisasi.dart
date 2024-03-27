@@ -14,14 +14,16 @@ class HttpServiceImunisasi {
 
   static final _keluhanUrl = Uri.parse('${dotenv.env['url']}/addImunisasi');
   static addimunisasi(getIdOrtu, tanggalVaksin, anakke, jenisVaksin,
-      jadwalMendatang, context) async {
+      jadwalMendatang, tahun, bulan, context) async {
     EasyLoading.show(status: 'loading...');
     http.Response response = await _client.post(_keluhanUrl, body: {
       "id_user": getIdOrtu.toString(),
       "tanggal_vaksin": tanggalVaksin,
       "anak_ke": anakke.toString(),
       "jenis_vaksin": jenisVaksin,
-      "jadwal_mendatang": jadwalMendatang
+      "jadwal_mendatang": jadwalMendatang,
+      "tahun": tahun.toString(),
+      "id_bulan": bulan.toString(),
     });
     print(response.body);
     if (response.statusCode == 200) {
@@ -46,11 +48,6 @@ class HttpServiceImunisasi {
       Uri.parse('${dotenv.env['url']}/updateImunisasi');
 
   static updateImunisasi(id, tanggalVaksin,anakke, jenisVaksin,  jadwalMendatang, context) async {
-    print(id);
-    print(tanggalVaksin);
-    print(anakke);
-    print(jenisVaksin);
-    print(jadwalMendatang);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString('token');
     EasyLoading.show(status: 'loading...');
@@ -64,7 +61,7 @@ class HttpServiceImunisasi {
       "Accept": "application/json",
       "Authorization": "Bearer $token",
     });
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200) {
       // ignore: non_constant_identifier_names
 

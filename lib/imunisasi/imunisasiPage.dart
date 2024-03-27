@@ -88,11 +88,12 @@ class _ListImunisasiState extends State<ListImunisasi> {
         onRefresh: refresh,
         child: ListView.builder(
           itemCount: _listsData.length,
-          physics: const NeverScrollableScrollPhysics(),
+         
           itemBuilder: (context, index) => Card(
             margin: const EdgeInsets.all(10.0),
             child: Column(
               children: [
+                
                 ListTile(
                   title: Text(
                     "Nama: ${_listsData[index]['name']}",
@@ -102,8 +103,8 @@ class _ListImunisasiState extends State<ListImunisasi> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
-                    "Jenis Vaksin: ${_listsData[index]['jenis_vaksin']} \nVaksin Berikutnya: ${_listsData[index]['jadwal_mendatang']}",
-                    maxLines: 2,
+                    "Jenis Vaksin: ${_listsData[index]['jenis_vaksin']} \nVaksin Berikutnya: ${_listsData[index]['jadwal_mendatang']}\nTahun: ${_listsData[index]['tahun']}\nBulan: ${_listsData[index]['nama_bulan']}",
+                    maxLines: 4,
                     style: const TextStyle(fontSize: 14.0),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -118,6 +119,8 @@ class _ListImunisasiState extends State<ListImunisasi> {
                             tanggal_vaksin: _listsData[index]['tanggal_vaksin'].toString(),
                             anak_ke: _listsData[index]['anak_ke'].toString(),
                             jadwal_mendatang: _listsData[index]['jadwal_mendatang'].toString(),
+                            tahun: _listsData[index]['tahun'].toString(),
+                            namaBulan: _listsData[index]['nama_bulan'].toString(),
                             ),
                       ),
                     );

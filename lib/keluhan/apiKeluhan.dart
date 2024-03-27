@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:puskes/keluhan/keluhanPage.dart';
 import 'package:puskes/keluhan/listKeluhanUsers.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
 
 class HttpServiceKeluhan {
   static final _client = http.Client() ;
@@ -85,6 +87,40 @@ class HttpServiceKeluhan {
           builder: (BuildContext context) => const ListKeluhanUsers(),
         ),
       );
+      // var Users = jsonDecode(response.body);
+      // print(Users);
+     
+    } else {
+      EasyLoading.showError('Insert Gagal');
+      EasyLoading.dismiss();
+    }
+  }  
+  _launchURL(url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
+  static final _cetak = Uri.parse('${dotenv.env['url']}/word');
+  static cetak(id, context) async {
+    print(id);
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+     var token = preferences.getString('token');
+    EasyLoading.show(status: 'loading...');
+    http.Response response = await _client
+        .post(_cetak, body: {"id": id}, headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer $token",
+    });
+        print(response.body);
+    if (response.statusCode == 200) {
+      // ignore: non_constant_identifier_names
+ final data = jsonDecode(response.body);
+      EasyLoading.dismiss();
+      launchUrl(Uri.parse(data['file']));
       // var Users = jsonDecode(response.body);
       // print(Users);
      

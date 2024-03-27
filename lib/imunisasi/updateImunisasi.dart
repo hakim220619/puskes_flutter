@@ -17,7 +17,10 @@ class ImunisasiUsersAdminById extends StatefulWidget {
       required this.jenis_vaksin,
       required this.tanggal_vaksin,
       required this.anak_ke,
-      required this.jadwal_mendatang})
+      required this.jadwal_mendatang,
+      required this.tahun,
+      required this.namaBulan
+      })
       : super(key: key);
 
   final String id;
@@ -26,6 +29,8 @@ class ImunisasiUsersAdminById extends StatefulWidget {
   final String tanggal_vaksin;
   final String anak_ke;
   final String jadwal_mendatang;
+  final String tahun;
+  final String namaBulan;
 
   @override
   _ImunisasiUsersAdminByIdState createState() =>
@@ -35,6 +40,7 @@ class ImunisasiUsersAdminById extends StatefulWidget {
 class _ImunisasiUsersAdminByIdState extends State<ImunisasiUsersAdminById> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? anakke = '';
+  String? selectedJenisVaksin = '';
   var jenisVaksin;
   @override
   void dispose() {
@@ -53,7 +59,7 @@ class _ImunisasiUsersAdminByIdState extends State<ImunisasiUsersAdminById> {
   TextEditingController tanggalVaksin = TextEditingController();
 
   Widget build(BuildContext context) {
-    String? selectedJenisVaksin = widget.jenis_vaksin;
+
 
     final List<String> nameList = <String>[
       "imunisasi Bcg Polio",
@@ -80,13 +86,59 @@ class _ImunisasiUsersAdminByIdState extends State<ImunisasiUsersAdminById> {
           ),
         ),
         body: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           child: Form(
             key: _formKey,
             child: SafeArea(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    TextFormField(
+                      readOnly: true,
+                      obscureText: false,
+                      initialValue: widget.tahun.toString(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Jenis Vaksin';
+                        }
+                        return null;
+                      },
+                      maxLines: 1,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          prefixIcon: const Icon(Icons.date_range),
+                          labelText: 'Tahun',
+                          hintText: 'Tahun'),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      readOnly: true,
+                      obscureText: false,
+                      initialValue: widget.namaBulan.toString(),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Jenis Vaksin';
+                        }
+                        return null;
+                      },
+                      maxLines: 1,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          prefixIcon: const Icon(Icons.date_range_sharp),
+                          labelText: 'Nama Bulan',
+                          hintText: 'Nama Bulan'),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       readOnly: true,
                       obscureText: false,
@@ -130,7 +182,7 @@ class _ImunisasiUsersAdminByIdState extends State<ImunisasiUsersAdminById> {
                         if (value == null) return 'Silahkan Masukan Data';
                         return null;
                       },
-                      value: selectedJenisVaksin,
+                      value: widget.jenis_vaksin,
                       onChanged: (vale) {
                         setState(() {
                           selectedJenisVaksin = vale;
@@ -238,12 +290,13 @@ class _ImunisasiUsersAdminByIdState extends State<ImunisasiUsersAdminById> {
                       children: [
                         InkWell(
                             onTap: () async {
+                              print(selectedJenisVaksin);
                               if (_formKey.currentState!.validate()) {
                                 await HttpServiceImunisasi.updateImunisasi(
                                     widget.id.toString(),
                                     tanggalVaksin.text == '' ? widget.tanggal_vaksin : tanggalVaksin.text,
                                     anakke == '' ? widget.anak_ke : anakke.toString(),
-                                    selectedJenisVaksin,
+                                    selectedJenisVaksin == '' ? widget.jenis_vaksin : selectedJenisVaksin,
                                     jadwalMendatang.text == '' ? widget.jadwal_mendatang : jadwalMendatang.text,
                                     context);
                               }

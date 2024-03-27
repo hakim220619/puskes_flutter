@@ -13,6 +13,10 @@ class AddImunisasi extends StatefulWidget {
   _AddImunisasiState createState() => _AddImunisasiState();
 }
 
+String? TahunContr;
+String? bulan;
+List _listsData = [];
+
 class _AddImunisasiState extends State<AddImunisasi> {
   late String anakke;
   var jenisVaksin;
@@ -41,38 +45,76 @@ class _AddImunisasiState extends State<AddImunisasi> {
     }
   }
 
+  Future<dynamic> GetMonth(id_user, tahun) async {
+    try {
+      print(tahun);
+      print(id_user);
+
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var token = preferences.getString('token');
+      var url = Uri.parse("${dotenv.env['url']}/getMonthImunisasi");
+      final response = await http.post(url, body: {
+        'id_user': id_user.toString(),
+        'tahun': tahun.toString()
+      }, headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer $token",
+      });
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // print(data);
+        setState(() {
+          _listsData = data['data'];
+          print(_listsData);
+        });
+      }
+    } catch (e) {
+      // print(e);
+    }
+  }
+
   void initState() {
     super.initState();
     getuserOrtu();
-
+    
+    
     // getagentTo();
   }
-final surveyDateController = TextEditingController(text: '');
- 
+
+  final surveyDateController = TextEditingController(text: '');
 
   @override
   void dispose() {
     _formKey.currentState?.dispose();
     super.dispose();
+
   }
 
   TextEditingController jadwalMendatang = TextEditingController();
   TextEditingController tanggalVaksin = TextEditingController();
 
   final List<String> nameList = <String>[
-      "imunisasi Bcg Polio",
-      "imunisasi DPT-HB-Hib 1 polio 2",
-      "imunisasi DPT-HB-Hib 2 polio 3",
-      "imunisasi DPT-HB-Hib 3 polio 4",
-      "imunisasi Campak",
-      "imunisasi DPT-HB-Hib 1 dosis",
-      "imunisasi Campak Rubella 1 dosis",
-      "imunisasi Campak Rubella dan DT",
-      "imunisasi Tethanus Diphteria TD",
-      "imunisasi Pneumococcal Conjugate Vaccine(PCV)",
-      "imunisasi Rotavirus",
-      "imunisasi Human Papilloma Virus(HPV)",
-    ];
+    "imunisasi Bcg Polio",
+    "imunisasi DPT-HB-Hib 1 polio 2",
+    "imunisasi DPT-HB-Hib 2 polio 3",
+    "imunisasi DPT-HB-Hib 3 polio 4",
+    "imunisasi Campak",
+    "imunisasi DPT-HB-Hib 1 dosis",
+    "imunisasi Campak Rubella 1 dosis",
+    "imunisasi Campak Rubella dan DT",
+    "imunisasi Tethanus Diphteria TD",
+    "imunisasi Pneumococcal Conjugate Vaccine(PCV)",
+    "imunisasi Rotavirus",
+    "imunisasi Human Papilloma Virus(HPV)",
+  ];
+  final List<String> tahun = <String>[
+    "2023",
+    "2024",
+    "2025",
+    "2026",
+  ];
 
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -116,11 +158,69 @@ final surveyDateController = TextEditingController(text: '');
                       onChanged: (value) => setState(
                         () {
                           if (value != null) getIdOrtu = value;
-                          
+
                           // print(selected);
                         },
                       ),
-                      
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    DropdownButtonFormField(
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.date_range),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          hintText: 'Tahun'),
+                      isExpanded: true,
+                      items: tahun.map(
+                        (item) {
+                          return DropdownMenuItem(
+                            value: item,
+                            child: Text(item),
+                          );
+                        },
+                      ).toList(),
+                      validator: (value) {
+                        if (value == null) return 'Silahkan Masukan Data';
+                        return null;
+                      },
+                      value: TahunContr,
+                      onChanged: (vale) {
+                        setState(() {
+                          bulan = null;
+                          GetMonth(getIdOrtu, vale);
+                          TahunContr = vale;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    DropdownButtonFormField(
+                      decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          hintText: 'Bulan'),
+                      isExpanded: true,
+                      items: _listsData.map((item) {
+                        return DropdownMenuItem(
+                            value: item['id'].toString(),
+                            child: Text(item['nama_bulan'].toString()));
+                      }).toList(),
+                      validator: (value) {
+                        if (value == null) return 'Silahkan Masukan Data';
+                        return null;
+                      },
+                      value: bulan,
+                      onChanged: (vale) {
+                        setState(() {
+                          bulan = vale;
+                        });
+                      },
                     ),
                     const SizedBox(
                       height: 10,
@@ -280,7 +380,11 @@ final surveyDateController = TextEditingController(text: '');
                                 anakke,
                                 jenisVaksin,
                                 jadwalMendatang.text,
+                                TahunContr,
+                                bulan,
                                 context);
+                                TahunContr = null;
+                                bulan = null;
                           }
                         },
                         child: Container(

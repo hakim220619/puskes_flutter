@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:puskes/keluhan/apiKeluhan.dart';
 import 'package:puskes/login/service/servicePage.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class VerifikasiAdmin extends StatefulWidget {
   const VerifikasiAdmin(
@@ -144,42 +150,67 @@ class _VerifikasiAdminState extends State<VerifikasiAdmin> {
                     height: 20,
                   ),
                   role == '1'
-                      ? widget.verifikasi == '0' ? InkWell(
-                          onTap: () async {
-                            await HttpServiceKeluhan.verivikasi(
-                                widget.id, context);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 1, vertical: 10),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.verified,
-                                  color: Colors.white,
-                                ),
-                                Text(
-                                  "Verifikasi",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
+                      ? widget.verifikasi == '0'
+                          ? InkWell(
+                              onTap: () async {
+                                await HttpServiceKeluhan.verivikasi(
+                                    widget.id, context);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 1, vertical: 10),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.verified,
                                       color: Colors.white,
-                                      fontSize: 20),
+                                    ),
+                                    Text(
+                                      "Verifikasi",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 20),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                color: Color.fromRGBO(9, 107, 199, 1),
-                                borderRadius: BorderRadius.circular(10)),
-                          ),
-                        ) : Text('')
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color.fromRGBO(9, 107, 199, 1),
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            )
+                          : Text('')
                       : InkWell(
                           onTap: () async {
-                            await HttpServiceKeluhan.verivikasi(
-                                widget.id, context);
+                               final _client = http.Client() ;
+                              final _cetak = Uri.parse('${dotenv.env['url']}/word');
+                            SharedPreferences preferences =
+                                await SharedPreferences.getInstance();
+                            var token = preferences.getString('token');
+                            EasyLoading.show(status: 'loading...');
+                            http.Response response =
+                                await _client.post(_cetak, body: {
+                              "id": widget.id.toString()
+                            }, headers: {
+                              "Accept": "application/json",
+                              "Authorization": "Bearer $token",
+                            });
+                            print(response.body);
+                            if (response.statusCode == 200) {
+                              // ignore: non_constant_identifier_names
+                              final data = jsonDecode(response.body);
+                              EasyLoading.dismiss();
+                              launchUrl(Uri.parse(data['file']));
+                              // var Users = jsonDecode(response.body);
+                              // print(Users);
+                            } else {
+                              EasyLoading.showError('Insert Gagal');
+                              EasyLoading.dismiss();
+                            }
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(
