@@ -20,7 +20,7 @@ class HttpService {
     http.Response response = await _client
         .post(_loginUrl, body: {"email": email, "password": password});
 
-    // print(response.body);
+    print(response.body);
     if (response.statusCode == 200) {
       // ignore: non_constant_identifier_names
 
@@ -37,9 +37,9 @@ class HttpService {
       await pref.setString(
           "jenis_kelamin", Users['userData']['jenis_kelamin'].toString());
       await pref.setString(
-          "bb_lahir", Users['userData']['bb_lahir'].toString());
+          "bb_lahir", Users['bb_lahir'].toString());
       await pref.setString(
-          "tb_lahir", Users['userData']['tb_lahir'].toString());
+          "tb_lahir", Users['tb_lahir'].toString());
       await pref.setString(
           "nama_ortu", Users['userData']['nama_ortu'].toString());
       await pref.setString("token", Users['token']);
